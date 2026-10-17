@@ -21,3 +21,6 @@
 # source-tree run symlinks (see BUILD.md)
 /mods
 /lib
+
+# release tarballs
+/releases/

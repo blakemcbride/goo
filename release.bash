@@ -1,39 +1,27 @@
-#!/usr/local/bin/bash
+#!/bin/bash
+# Build a goo source release tarball from the current git tree.
+# Usage: ./release.bash <version>     e.g. ./release.bash 0.156
+# Produces releases/goo-<version>.tar.gz with configure included and
+# the demo/experiment directories pruned.
 
-version=$1
-os=$2
-type=$3
-goo=goo-$version-$os-$type
+set -e
+cd "$(dirname "$0")"
 
-base=`pwd`
-mkdir releases/$goo
-cd releases/$goo
+version=${1:?usage: release.bash <version>}
+goo=goo-$version
 
-cvs co goo
+autoconf                        # make sure configure is current
+mkdir -p releases
+rm -rf releases/$goo
+git archive --format=tar --prefix=$goo/ HEAD | tar -x -C releases
+cp configure releases/$goo/
+rm -rf releases/$goo/src/demos \
+       releases/$goo/src/extras \
+       releases/$goo/src/interpreters \
+       releases/$goo/src/music \
+       releases/$goo/src/nest \
+       releases/$goo/src/samurui
+tar -C releases -czf releases/$goo.tar.gz $goo
+rm -rf releases/$goo
 
-mv goo/c .
-mv goo/TERMS .
-mv goo/Makefile.in .
-mv goo/README.TXT .
-mv goo/acconfig.h .
-mv goo/aclocal.m4 .
-mv goo/configure.in .
-mv goo/doc .
-mv goo/emacs .
-mv goo/install-sh .
-mv goo/mkinstalldirs .
-mv goo/src .
-cp ../../configure .
-
-rm -rf goo
-rm -rf src/demos
-rm -rf src/extras
-rm -rf src/gui
-rm -rf src/interpreters
-rm -rf src/music
-rm -rf src/nest
-rm -rf src/util
-
-cd ..
-tar cf $goo.tar $goo
-gzip $goo.tar
+echo "releases/$goo.tar.gz"
