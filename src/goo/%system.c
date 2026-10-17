@@ -7,8 +7,11 @@
 #include <sys/stat.h>
 #if !defined(_MSC_VER)
 #include <unistd.h>
+#include <sys/wait.h>
 #endif
 #include <errno.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 extern P Yfab_sym;
 extern P Yerror;

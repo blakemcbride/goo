@@ -87,11 +87,12 @@ IMPORTEXPORT extern P YPib(P i);
 */
 
 #define YPEE(x, y)    ((x) == (y))
-#define YPeqQ(x, y)   ((x) == (y))
+/* Comparisons are PINT-sized so generated (P) casts don't truncate/warn. */
+#define YPeqQ(x, y)   ((PINT)((x) == (y)))
 #define YPbb(x)       (((x) == 0) ? YPfalse : YPtrue)
-#define YPbu(x)       ((x) == YPfalse)
-#define YPiE(x, y)    (((PINT)(x)) == ((PINT)(y)))
-#define YPiL(x, y)    (((PINT)(x)) <  ((PINT)(y)))
+#define YPbu(x)       ((PINT)((x) == YPfalse))
+#define YPiE(x, y)    ((PINT)(((PINT)(x)) == ((PINT)(y))))
+#define YPiL(x, y)    ((PINT)(((PINT)(x)) <  ((PINT)(y))))
 #define YPiA(x, y)    (((PINT)(x)) +  ((PINT)(y)))
 #define YPi_(x, y)    (((PINT)(x)) -  ((PINT)(y)))
 #define YPiT(x, y)    (((PINT)(x)) *  ((PINT)(y)))
@@ -107,8 +108,8 @@ IMPORTEXPORT extern P YPib(P i);
 #define YPiGG(x, y)   (((PINT)(x)) >> ((PINT)(y)))
 #define YPiLLL(x, y)  (((PINT)(x)) << ((PINT)(y))) /* TODO: FIX THIS <<< */
 #define YPiGGG(x, y)  (((PINT)(x)) >> ((PINT)(y))) /* TODO: FIX THIS >>> */
-#define YPcE(x, y)    (((PCHR)(PINT)(x)) == ((PCHR)(PINT)(y)))
-#define YPcL(x, y)    (((PCHR)(PINT)(x)) <  ((PCHR)(PINT)(y)))
+#define YPcE(x, y)    ((PINT)(((PCHR)(PINT)(x)) == ((PCHR)(PINT)(y))))
+#define YPcL(x, y)    ((PINT)(((PCHR)(PINT)(x)) <  ((PCHR)(PINT)(y))))
 
 #define RTVBOUNDP(x)  (((x) == PNUL) ? YPfalse : YPtrue)
 #define BOUNDP(x)     RTVBOUNDP(x)
@@ -365,27 +366,29 @@ EXTTVAR(goo_thread);
 #define REGSSET(v)    TSET(tregs, (P)(v))
 #define DEFREGS()     REGS regs = REGSREF()
 #define DEFCREGS()    REGS regs = (REGS)0
-#define YPdef_regs()  regs = REGSREF()
-#define YPset_regs(x) regs = (REGS)(x)
+#define YPdef_regs()  (regs = REGSREF())
+#define YPset_regs(x) (regs = (REGS)(x))
 
 #define REG(x)       (regs->x)
 #define CREG(x)      (REGSCREF()->x)
 #define REGSET(x, v) (regs->x = (v))
 
-#define MAX_STACK_SIZE         70000
-#define YPmax_stack_len()      (MAX_STACK_SIZE)
+#define MAX_STACK_SIZE         1000000
+/* In BYTES: the goo-level %stack-check compares this against the
+   byte difference (%sp-reg) - (%stack-reg). */
+#define YPmax_stack_len()      (MAX_STACK_SIZE * (PINT)sizeof(P))
 
 #define YPfun_reg()            (Pfun)
 #define YPnext_methods_reg()   (REG(next_methods))
 #define YPnext_methods_reg_setter(x) (REG(next_methods) = (x))
 #define YPsp_reg()             (REG(sp))
-#define YPsp_elt(i)            (REG(sp)[(int)i])
+#define YPsp_elt(i)            (REG(sp)[(PINT)(i)])
 #define YPfp_reg()             (REG(fp))
 #define YPsp_reg_setter(value) (REGSET(sp, value))
 #define YPfp_reg_setter(value) (REGSET(fp, value))
 #define YPstack_reg()          (REG(stack))
-#define YPstack_check_regQ()          (P)(REG(stack_checkp))
-#define YPstack_check_regQ_setter(x)  (REGSET(stack_checkp, (int)x))
+#define YPstack_check_regQ()          (P)(PINT)(REG(stack_checkp))
+#define YPstack_check_regQ_setter(x)  ((PINT)(REGSET(stack_checkp, (int)(PINT)(x))))
 
 #define YPvpc()             (REG(vpc))
 #define YPvfn()             (REG(vfn))
@@ -727,7 +730,7 @@ EXT(YPdispatch,"boot","%dispatch");
 IMPORTEXPORT extern P YPpair (P,P);
 IMPORTEXPORT extern P YPPlist(int num, ...);
 // IMPORTEXPORT extern P YPint (P);
-#define YPint(x) ((P)((((int)x)<<2)|1))   // TODO: KEEP IN SYNC WITH BOOT.GOO!!!
+#define YPint(x) ((P)((((PINT)(x))<<2)|1))   // TODO: KEEP IN SYNC WITH BOOT.GOO!!!
 IMPORTEXPORT extern P YPchr (P);
 IMPORTEXPORT extern P YPflo (P);
 IMPORTEXPORT extern P YPsb (P);
@@ -906,5 +909,7 @@ STATIC_NOT_GRT_C INLINE P YevalSast_evalYPdlvar_setter(P v, P x) {
 IMPORTEXPORT extern P YPtime ();
 
 IMPORTEXPORT extern P YPlit (P n);
+
+#include "grt-protos.h"
 
 #endif

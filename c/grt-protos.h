@@ -1,0 +1,118 @@
+/* Prototypes for runtime primitives defined in g2c-generated code and grt.c.
+   The g2c compiler emits cross-module calls to these without declarations;
+   on 64-bit targets an implicit int return truncates heap pointers, so they
+   must be declared here (grt.h includes this file).  Generated from the
+   definitions; keep in sync if primitive signatures change. */
+
+#ifndef GRT_PROTOS_H
+#define GRT_PROTOS_H
+
+P allocate (unsigned long size);
+P allocate_atomic (unsigned long size);
+P YevalSg2cYPprint_cpu_usage(char *message);
+P YgooSfunYprop_bound_atQ(P object_,P offset_);
+P YgooSfunYprop_value_at(P object_,P offset_);
+P YgooSfunYprop_value_at_setter(P z_,P object_,P offset_);
+P YgooSioSportYPclose_in_port (P s);
+P YgooSioSportYPclose_out_port (P s);
+PPORT YgooSioSportYPcurrent_in_port (void);
+PPORT YgooSioSportYPcurrent_out_port (void);
+P YgooSioSportYPforce_out (P s);
+P YgooSioSportYPget (P s);
+P YgooSioSportYPopen_in_file (P name);
+P YgooSioSportYPopen_out_file (P name);
+P YgooSioSportYPpeek (P s);
+P YgooSioSportYPput (P s, P x);
+P YgooSioSportYPputs (P s, P x);
+P YgooSioSportYPreadyQ (P s);
+P YgooSmathYPf_(P x, P y);
+P YgooSmathYPfA(P x, P y);
+P YgooSmathYPfacos(P x);
+P YgooSmathYPfasin(P x);
+P YgooSmathYPfatan(P x);
+P YgooSmathYPfatan2(P y, P x);
+P YgooSmathYPfcos(P x);
+P YgooSmathYPfcosh(P x);
+P YgooSmathYPfE(P x, P y);
+P YgooSmathYPfi2f(P x);
+P YgooSmathYPfL(P x, P y);
+P YgooSmathYPflo_bits (P x);
+P YgooSmathYPflog(P x);
+P YgooSmathYPfpow(P x, P n);
+P YgooSmathYPfS(P x, P y);
+P YgooSmathYPfsin(P x);
+P YgooSmathYPfsinh(P x);
+P YgooSmathYPfsqrt(P x);
+P YgooSmathYPft(P x);
+P YgooSmathYPfT(P x, P y);
+P YgooSmathYPftan(P x);
+P YgooSmathYPftanh(P x);
+P YgooSsystemYPcompile (P cfile, P sofile, P incs, P libs);
+P YgooSsystemYPcreate_directory (P name);
+P YgooSsystemYPfile_existsQ (P name);
+P YgooSsystemYPfile_mtime (P name);
+P YgooSsystemYPfile_type (P name);
+P YgooSsystemYPload(P name);
+P YgooSsystemYPos_name ();
+P YgooSsystemYPos_val (P name);
+P YgooSsystemYPos_val_setter (P value, P name);
+P YgooSsystemYPtime ();
+P YOadd(P c_,P e_);
+P YOadd_new(P c_,P e_);
+P YOlen(P x_);
+P YOpair(P h_,P t_);
+P YOsingleton_isaQ(P o_,P t_);
+P YOtail_setter(P z_,P x_);
+P YPallocate_stack(P num_);
+P YPclass(P class_prop_len_,P class_name_,P class_parents_,P class_direct_props_,P class_ancestors_,P class_props_,P class_children_,P class_gens_,P class_mets_,P class_forward_,P class_id_,P class_row_);
+P YPclass_ancestors_setter(P z_,P x_);
+P YPclass_children_setter(P z_,P x_);
+P YPclass_direct_props_setter(P z_,P x_);
+P YPclass_forward_setter(P z_,P x_);
+P YPclass_gens_setter(P z_,P x_);
+P YPclass_id_setter(P z_,P x_);
+P YPclass_mets_setter(P z_,P x_);
+P YPclass_prop_len_setter(P z_,P x_);
+P YPclass_props_setter(P z_,P x_);
+P YPclass_row_setter(P z_,P x_);
+P YPdo_stack_frames (P fun);
+P YPfb(P x_);
+P YPfu(P x_);
+P YPfun_cache_setter(P z_,P x_);
+P YPgen_cache(P gen_cache_missableQ_,P gen_cache_arg_pos_,P gen_cache_singletons_,P gen_cache_classes_,P gen_cache_count_);
+P YPgen_cache_arg_pos_setter(P z_,P x_);
+P YPgen_cache_classes_setter(P z_,P x_);
+P YPgen_cache_singletons_setter(P z_,P x_);
+P YPgen_code_setter(P z_,P x_);
+P YPgen_mets_setter(P z_,P x_);
+P YPiu(P x_);
+P YPmet_env_setter(P z_,P x_);
+P YPopts_tup(P opts_tup_location_,P opts_tup_count_,P opts_tup_tup_);
+P YPpatch_early_generics();
+P YPrep(P len_,P e_);
+P YPsingleton(P type_object_);
+P YPstr(P len_,P e_);
+P YPtag_into(P x_,P t_);
+P YPtup(P len_,P e_);
+P YPunexec(P name);
+P YPuntag_into(P x_);
+P YtimeSeventYPevent_broadcast (P handle);
+P YtimeSeventYPevent_create (P name);
+P YtimeSeventYPevent_reset (P handle);
+P YtimeSeventYPevent_signal (P handle);
+P YtimeSeventYPevent_wait (P event, P lock);
+P YtimeSeventYPevent_wait_timed (P event, P lock, P timeout);
+P YtimeSlockYPlock_create (P name);
+P YtimeSlockYPlock_destroy (P handle);
+P YtimeSlockYPlock_lock (P handle);
+P YtimeSlockYPlock_unlock (P handle);
+P YtimeSthreadsYPthread_create (P function);
+P YtimeSthreadsYPthread_current ();
+P YtimeSthreadsYPthread_goo_thread ();
+P YtimeSthreadsYPthread_goo_thread_setter (P value);
+P YtimeSthreadsYPthread_join (P thread);
+P YtimeSthreadsYPthread_priority_setter (P x, P thread);
+P YtimeSthreadsYPthread_sleep (P secs);
+P YtimeSthreadsYPthread_yield ();
+
+#endif /* GRT_PROTOS_H */

@@ -7,6 +7,7 @@ top_srcdir = @top_srcdir@
 srcdir = @srcdir@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
+datarootdir = @datarootdir@
 datadir = @datadir@
 bindir = $(exec_prefix)/bin
 infodir = $(prefix)/info

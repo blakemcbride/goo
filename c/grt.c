@@ -6,10 +6,12 @@
 
 #define IN_GRT_C
 #include "grt.h"
+#include <stdlib.h>
 #if !defined(MSWIN32) && !defined(_MSC_VER)
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <unistd.h>
 #endif
 
 #if defined(_MSC_VER)
@@ -21,6 +23,14 @@
 #endif
 
 extern P Ynil;
+
+/* Defined in g2c-generated code (goo/boot.c); must be declared so their
+   P-sized return values are not truncated through implicit int. */
+extern P YPiu(P);
+extern P YPtag(P, P);
+extern P YPuntag(P);
+extern P YPhead_setter(P, P);
+extern P YPtail_setter(P, P);
 
 /* DEBUGGING */
 
@@ -143,7 +153,7 @@ INLINE P YPclone (P x) {
   PINT i, size;
   P   c, y;
   c    = YPobject_class(x);
-  size = YPiu(YPclass_prop_len(c));
+  size = (PINT)YPiu(YPclass_prop_len(c));
   y    = YPobject_of(c, (P)size);
   for (i = 0; i < (PINT)size; i++)
     YPprop_elt_setter(YPprop_elt(x, (P)i), y, (P)i);
@@ -252,7 +262,7 @@ INLINE P ENVFAB (int n) {
   return env;
 }
 
-P YPvm_fun_env_fab (P n) { return ENVFAB((int)n); }
+P YPvm_fun_env_fab (P n) { return ENVFAB((int)(PINT)n); }
 
 P FABENV (int size, ...) {
   int i;
@@ -653,7 +663,7 @@ void print_kind (P adr, int prettyp, int depth) {
   } else {
     int i;
     P c       = YPobject_class(adr);
-    int size  = (int)YPiu(YPclass_prop_len(c));
+    int size  = (int)(PINT)YPiu(YPclass_prop_len(c));
     int below = MIN(size, 10);
     printf("(%s", typename);
     for (i = 0; i < below; i++) {
@@ -709,7 +719,7 @@ void desobj (P adr) {
       int genp  = strcmp(typename, "<gen>") == 0;
       int funp  = metp | genp;
       P c       = YPobject_class(adr);
-      int size  = (int)YPiu(YPclass_prop_len(c));
+      int size  = (int)(PINT)YPiu(YPclass_prop_len(c));
       int from  = funp ? 1 : 0;
       int below = MIN(metp ? size - 1 : size, 10);
       for (i = from; i < below; i++)
@@ -1000,7 +1010,7 @@ P DYNFAB(P v) {
   *key = dynvar_key++;
   if (dynvar_key > MAX_DYNVARS)
     XXCALL1(1, Yerror, YPsb("TOO MANY DYNAMIC VARIABLES."));
-  return (P)*key;
+  return (P)(PINT)*key;
 }
 
 REGS YPfab_regs() {

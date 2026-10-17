@@ -10,6 +10,7 @@ top_srcdir = @top_srcdir@
 srcdir = @srcdir@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
+datarootdir = @datarootdir@
 datadir = @datadir@
 bindir = $(exec_prefix)/bin
 infodir = $(prefix)/info
@@ -19,7 +20,10 @@ exe_suffix=@exe_suffix@
 
 CC = @CC@
 CPPFLAGS = @CPPFLAGS@
-CFLAGS = $(CPPFLAGS) @CFLAGS@
+# -std=gnu89: the runtime and g2c-generated C predate C99 (implicit
+# declarations, old-style returns); -fcommon: tentative global definitions
+# are duplicated across generated files.
+CFLAGS = $(CPPFLAGS) @CFLAGS@ -std=gnu89 -fcommon
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 INSTALL = @INSTALL@
@@ -75,6 +79,7 @@ else
 	$(INSTALL_PROGRAM) $(sub)/$(sub)$(exe_suffix) $(bindir)
 endif
 	$(INSTALL_DATA) grt.h $(GOO_LIB)
+	$(INSTALL_DATA) grt-protos.h $(GOO_LIB)
 	$(INSTALL_DATA) config.h $(GOO_LIB)
 	$(INSTALL_DATA) dlgrt.h $(GOO_LIB)
 ifeq ($(build_gc), yes)

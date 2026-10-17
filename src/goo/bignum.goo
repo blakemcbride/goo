@@ -302,7 +302,7 @@ P gmp_initialize () {
 (dm trunc/ (x|<flo> y|<flo> => (tup z|<int> rem|<flo>))
   (def divided (/ x y))
   (def result  0)
-  #{ INTFLO iz;  iz.i = $(%fu x);
+  #{ INTFLO iz;  iz.i = (PINT)$(%fu x);
      if (rawint_fits_fixnum((PINT)iz.f))
        $result = ib((PINT)iz.f);
      else { 

@@ -1,14 +1,10 @@
 dnl GOO_CHECK_EXE_SUFFIX()
 dnl Determines the suffix attached to executables.  For an MS-DOS derived OS
 dnl this is .exe, and the empty string for Unix.
-AC_DEFUN(GOO_CHECK_EXE_SUFFIX,
-[AC_MSG_CHECKING(name suffix of executables)
-AC_CACHE_VAL(goo_cv_exe_suffix,
-[goo_cv_exe_suffix=""
-AC_TRY_COMPILE([],
-  [;],
-  [if test -f conftest.exe; then goo_cv_exe_suffix=.exe; fi])
-])dnl
+AC_DEFUN([GOO_CHECK_EXE_SUFFIX],
+[AC_REQUIRE([AC_PROG_CC])dnl
+AC_MSG_CHECKING(name suffix of executables)
+goo_cv_exe_suffix="$EXEEXT"
 if test -z "$goo_cv_exe_suffix"; then
   AC_MSG_RESULT(none)
   goo_target_os="Unix"
@@ -22,7 +18,7 @@ AC_SUBST(goo_target_os)])
 
 dnl Check if Boehm's conservative garbage collector available as
 dnl library, or is present in subdirectory gc/
-AC_DEFUN(GOO_CHECK_GC_LIB, 
+AC_DEFUN([GOO_CHECK_GC_LIB],
 [AC_MSG_CHECKING([for local copy of Boehm GC libraries])
 if test -f gc/Makefile; then
   build_gc=yes

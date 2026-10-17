@@ -234,7 +234,8 @@
   (def out-name  (add-build-path appname "Makefile"))
   (with-port (out (open <file-out-port> out-name))
     (msg* out "C_OBJS_DD = $(patsubst %%,..%s%%,$(C_OBJS))\n" sep)
-    (msg* out "%s%s: ..%sgrt.h\n" *c-extension* *obj-extension* sep)
+    ;; pattern rule: suffix rules silently ignore prerequisites under GNU make
+    (msg* out "%%%s: %%%s ..%sgrt.h ..%sgrt-protos.h\n" *obj-extension* *c-extension* sep sep)
     (msg* out "\t$(CC) -I.. ")
     (for-mods (mod loader)
       (do (fun (i) (unless (include-filename i) (msg* out "-I%s " i)))
@@ -296,7 +297,7 @@
   (msg* out "\nstatic P sloc (int line) {\n")
   (msg* out "  if (%s == PNUL) %s = " modvar modvar)
   (generate-quotation out modname) (msg* out ";\n")
-  (msg* out "  return %s(%s((P)line), %s);\n" 
+  (msg* out "  return %s(%s((P)(PINT)line), %s);\n"
         (mangle-boot-name "%src-loc") (mangle-boot-name "%ib") modvar)
   (msg* out "}\n")
   )
@@ -920,7 +921,8 @@
     (for ((ref (c-inline-refs e)))
       (to-pc ref f d oot)))
   (def e?  (c-inline-expr? e))
-  (def lps (if f (if e? "(P)(" (cat (false-name) ";\n{ "))  ""))
+  ;; (P)(PINT) so an int-valued c-expr widens instead of warning on 64-bit
+  (def lps (if f (if e? "(P)(PINT)(" (cat (false-name) ";\n{ "))  ""))
   (def rps (if f (if e? ");"   "}\n")                       ""))
   (when f (gen-depth d oot) (gen-result e d oot))
   (puts oot lps)

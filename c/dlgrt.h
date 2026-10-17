@@ -9,6 +9,13 @@
 #undef BOUNDP
 #undef VARREF_OR
 
+/* Resolved from the goo executable at dlopen time; declared here so their
+   P-sized return values are not truncated through implicit int on 64-bit. */
+extern P YevalSast_evalYPbinding_boundQ (P);
+extern P YevalSast_evalYPbinding_value (P);
+extern P YevalSast_evalYPbinding_value_setter (P,P);
+extern P YevalSast_evalYPbinding_value_or (P,P);
+
 #define FUNFOR(x)     static P x##I(REGS)
 #define FUNCODEDEF(x) static P x##I (REGS regs)
 #define LOCNAM(x)     x##V
